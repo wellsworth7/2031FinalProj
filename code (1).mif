@@ -5,19 +5,24 @@ ADDRESS_RADIX=HEX;
 DATA_RADIX=HEX;
 
 CONTENT BEGIN
-0000: 9000; --         IN Switches
-0001: 100B; --         STORE Mask             ; Save full switch state
-0002: 080B; --         LOAD Mask
-0003: 100C; --         STORE OnlyMask         ; We're just using switch 0
-0004: B801; --         LOADI 1                ; Put 1 in AC
-0005: 600E; --         SHIFT 14               ; Move it to bits 15:14 = "01" (s_on)
-0006: 500C; --         OR OnlyMask            ; Combine with mask (LED0 = bit 0)
-0007: 9801; --         OUT LEDcontroller
-0008: 080C; --         LOAD OnlyMask
-0009: 9804; --         OUT Hex0
-000A: 2800; --         JUMP Start
-000B: 0000; -- Mask:         DW 0
-000C: 0000; -- OnlyMask:     DW 0
-[000D..07FF] : 0000; -- [empty memory]
+0000: 9000; --     IN Switches
+0001: 4801; --     AND &amp;B0000000000000001   ; SW0 only
+0002: 1011; --     STORE OnlyMask
+0003: 9003; --     IN Buttons
+0004: 380A; --     JPOS OnOnly              ; KEY1 not pressed
+0005: B801; --     LOADI 1
+0006: 600F; --     SHIFT 15                ; "10" → s_flash
+0007: 5011; --     OR OnlyMask
+0008: 9801; --     OUT LEDcontroller
+0009: 280E; --     JUMP Show
+000A: B801; --     LOADI 1
+000B: 600E; --     SHIFT 14                ; "01" → s_on
+000C: 5011; --     OR OnlyMask
+000D: 9801; --     OUT LEDcontroller
+000E: 0811; --     LOAD OnlyMask
+000F: 9804; --     OUT Hex0
+0010: 2800; --     JUMP Start
+0011: 0000; -- OnlyMask: DW 0
+[0012..07FF] : 0000; -- [empty memory]
 END;
 
