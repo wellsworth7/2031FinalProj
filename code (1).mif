@@ -1,0 +1,29 @@
+WIDTH=16;
+DEPTH=2048;
+
+ADDRESS_RADIX=HEX;
+DATA_RADIX=HEX;
+
+CONTENT BEGIN
+0000: 9000; --         IN Switches
+0001: 1011; --         STORE MaskOnly
+0002: 9804; --         OUT Hex0
+0003: B801; --         LOADI 1        ; s_on
+0004: 600E; --         SHIFT 14
+0005: 5011; --         OR MaskOnly
+0006: 1012; --         STORE ControlWord
+0007: 9805; --         OUT Hex1
+0008: 0812; --         LOAD ControlWord
+0009: 9801; --         OUT LEDcontroller
+000A: 0811; --         LOAD MaskOnly
+000B: 3800; --         JPOS Start      ; if mask != 0, skip clear
+000C: B800; --         LOADI 0
+000D: 600E; --         SHIFT 14        ; s_off
+000E: 1012; --         STORE ControlWord
+000F: 9801; --         OUT LEDcontroller
+0010: 2800; --         JUMP Start
+0011: 0000; -- MaskOnly:      DW 0
+0012: 0000; -- ControlWord:   DW 0
+[0013..07FF] : 0000; -- [empty memory]
+END;
+
