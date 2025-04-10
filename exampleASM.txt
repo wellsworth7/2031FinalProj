@@ -1,0 +1,34 @@
+ORG 0
+
+Start:
+    IN Switches
+    AND &B0000000000000001   ; SW0 only
+    STORE OnlyMask
+
+    IN Buttons
+    JPOS OnOnly              ; KEY1 not pressed
+
+    ; KEY1 is pressed → Flash LED0
+    LOADI 1
+    SHIFT 15                ; "10" → s_flash
+    OR OnlyMask
+    OUT LEDcontroller
+    JUMP Show
+
+OnOnly:
+    LOADI 1
+    SHIFT 14                ; "01" → s_on
+    OR OnlyMask
+    OUT LEDcontroller
+
+Show:
+    LOAD OnlyMask
+    OUT Hex0
+    JUMP Start
+
+OnlyMask: DW 0
+
+Switches:       EQU 000
+Buttons:        EQU 003
+LEDcontroller:  EQU 001
+Hex0:           EQU 004
