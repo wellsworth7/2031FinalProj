@@ -6,24 +6,18 @@ DATA_RADIX=HEX;
 
 CONTENT BEGIN
 0000: 9000; --         IN Switches
-0001: 1011; --         STORE MaskOnly
-0002: 9804; --         OUT Hex0
-0003: B801; --         LOADI 1        ; s_on
-0004: 600E; --         SHIFT 14
-0005: 5011; --         OR MaskOnly
-0006: 1012; --         STORE ControlWord
-0007: 9805; --         OUT Hex1
-0008: 0812; --         LOAD ControlWord
-0009: 9801; --         OUT LEDcontroller
-000A: 0811; --         LOAD MaskOnly
-000B: 3800; --         JPOS Start      ; if mask != 0, skip clear
-000C: B800; --         LOADI 0
-000D: 600E; --         SHIFT 14        ; s_off
-000E: 1012; --         STORE ControlWord
-000F: 9801; --         OUT LEDcontroller
-0010: 2800; --         JUMP Start
-0011: 0000; -- MaskOnly:      DW 0
-0012: 0000; -- ControlWord:   DW 0
-[0013..07FF] : 0000; -- [empty memory]
+0001: 100B; --         STORE Mask             ; Save full switch state
+0002: 080B; --         LOAD Mask
+0003: 100C; --         STORE OnlyMask         ; We're just using switch 0
+0004: B801; --         LOADI 1                ; Put 1 in AC
+0005: 600E; --         SHIFT 14               ; Move it to bits 15:14 = "01" (s_on)
+0006: 500C; --         OR OnlyMask            ; Combine with mask (LED0 = bit 0)
+0007: 9801; --         OUT LEDcontroller
+0008: 080C; --         LOAD OnlyMask
+0009: 9804; --         OUT Hex0
+000A: 2800; --         JUMP Start
+000B: 0000; -- Mask:         DW 0
+000C: 0000; -- OnlyMask:     DW 0
+[000D..07FF] : 0000; -- [empty memory]
 END;
 
